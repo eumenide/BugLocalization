@@ -23,9 +23,10 @@ def clean_str(string):
 	string = re.sub(r"\'ll", " \'ll", string)
 	string = re.sub(r",", " , ", string)
 	string = re.sub(r"!", " ! ", string)
-	string = re.sub(r"\(", " \( ", string)
-	string = re.sub(r"\)", " \) ", string)
-	string = re.sub(r"\?", " \? ", string)
+	string = re.sub(r"\.", " . ", string)
+	string = re.sub(r"\(", " ( ", string)
+	string = re.sub(r"\)", " ) ", string)
+	string = re.sub(r"\?", " ? ", string)
 	string = re.sub(r"\s{2,}", " ", string)
 	return string.strip().lower()
 
@@ -97,8 +98,13 @@ def batch_iter(data, batch_size, num_epochs, shuffle=True):
 
 
 if __name__ == '__main__':
-	nlp_data = load_data_from_xsl("../datasets/AspectJ/AspectJ.xlsx")
-	print(nlp_data[1])
+	nlp_data = load_data_from_xsl("../datasets/AspectJ/AspectJ_1.xlsx")
+	print(nlp_data[3])
 	print("--------------------")
-	print(nlp_data[2])
+	print(nlp_data[4])
+	print(nlp_data[5])
+	print(nlp_data[6])
+	print(nlp_data[7])
+	print(nlp_data[8])
+	print(nlp_data[9])
 
