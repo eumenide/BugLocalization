@@ -5,6 +5,7 @@ import numpy as np
 import re
 import xlrd
 from xml.dom import minidom
+import pandas as pd
 
 
 def clean_str(string):
@@ -17,10 +18,11 @@ def clean_str(string):
 	string = re.sub(r"[^A-Za-z0-9(),!?\'\`]", " ", string)
 	string = re.sub(r"\'s", " \'s", string)
 	string = re.sub(r"\'ve", " \'ve", string)
-	string = re.sub(r"n\'t", " n\'t", string)
+	string = re.sub(r"n\'t", "n not", string)
 	string = re.sub(r"\'re", " \'re", string)
 	string = re.sub(r"\'d", " \'d", string)
 	string = re.sub(r"\'ll", " \'ll", string)
+	string = re.sub(r"\'m", " am", string)
 	string = re.sub(r",", " , ", string)
 	string = re.sub(r"!", " ! ", string)
 	string = re.sub(r"\.", " . ", string)
@@ -38,15 +40,24 @@ def load_data_from_xsl(file_name):
 	:return: split sentences
 	"""
 	# Load data from files
-	data_book = xlrd.open_workbook(file_name, encoding_override='utf-8')
-	data_sheet = data_book.sheet_by_index(0)
+	# data_book = xlrd.open_workbook(file_name, encoding_override='utf-8')
+	# data_sheet = data_book.sheet_by_index(0)
 
-	nlp_data = []
-
+	nlp_data = pd.read_excel(file_name, sheet_name=0, header=0, usecols=[1,2,3],
+	                         converters={'bug_id': str, 'summary': str, 'description': str})
+	nlp_data.fillna(' ', inplace=True)
+	nlp_data['summary'] = nlp_data['summary'].map(lambda x: clean_str(x[x.find(' ', 4):]))
+	nlp_data['description'] = nlp_data['description'].map(lambda x: clean_str(x+''))
+	#
+	#  nlp_data['bug_id'] = clean_str(nlp_data['bug_id'])
+	# nlp_data['decription'] = clean_str(nlp_data['decription'])
 	# Split by words
-	nlp_rows = data_sheet.nrows
-	for row in range(1, nlp_rows):
-		nlp_data.append(clean_str(data_sheet.cell_value(row, 2) + data_sheet.cell_value(row, 3)))
+	# nlp_rows = data_sheet.nrows
+	# for row in range(1, nlp_rows):
+	# 	nlp_data['bug_id'] = data_sheet.cell_value(row, 1).astype(int)
+	# 	summary = data_sheet.cell_value(row, 2)
+	# 	print(summary)
+		# nlp_data['report'] = (clean_str(summary[summary.find(' ', 4):] + data_sheet.cell_value(row, 2)))
 
 	return nlp_data
 
@@ -99,12 +110,6 @@ def batch_iter(data, batch_size, num_epochs, shuffle=True):
 
 if __name__ == '__main__':
 	nlp_data = load_data_from_xsl("../datasets/AspectJ/AspectJ_1.xlsx")
-	print(nlp_data[3])
-	print("--------------------")
-	print(nlp_data[4])
-	print(nlp_data[5])
-	print(nlp_data[6])
-	print(nlp_data[7])
-	print(nlp_data[8])
-	print(nlp_data[9])
+	print(nlp_data['description'])
+
 
