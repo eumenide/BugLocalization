@@ -7,6 +7,8 @@ import nltk
 
 from nltk.corpus import stopwords
 
+stopwords_dic = set(stopwords.words('english')) | {'.', ':', '(', ')', '\n'}
+
 
 def clean_str(string):
 	"""
@@ -31,7 +33,9 @@ def clean_str(string):
 	# string = re.sub(r"\)", " ) ", string)
 	# string = re.sub(r"\?", " ? ", string)
 	string = re.sub(r"\s{2,}", " ", string)
-	string = re.sub(r"([a-z])([A-Z][a-z])", lambda x: x.group(1) + " " + x.group(2), string)
+	string = re.sub(r"([A-Za-z0-9][a-z])([A-Z])", lambda x: x.group(1) + " " + x.group(2), string)
+	string = re.sub(r"([A-Za-z0-9][a-z])([A-Z])", lambda x: x.group(1) + " " + x.group(2), string)
+	# string = re.sub(r"([A-Za-z0-9]+[a-z])([A-Z][a-z])", lambda x: x.group(1) + " " + x.group(2), string)
 	return string.strip().lower()
 
 
@@ -44,7 +48,7 @@ def tokenize_and_stopwords(text='', stopworddic=None, pattern=None):
 	:return: 分词后的结果，一个数组
 	'''
 	if stopworddic is None:
-		stopworddic = set(stopwords.words('english')) | {'.', ':', '(', ')', '\n'}
+		stopworddic = stopwords_dic
 	# print(stopworddic)
 	# stopworddic.add({'.', ':', '(', ')'})
 	if pattern is None:
