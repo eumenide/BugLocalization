@@ -50,7 +50,19 @@ def generate_tf(input_file, output_file):
 	return counters
 
 
-class MyThread(threading.Thread):
+def generate_idf(word, tf_list):
+	'''
+
+	:param word:
+	:param tf_list:
+	:return:
+	'''
+	n_doc = sum(1 for tf in tf_list if word in tf)
+
+	return math.log(len(tf_list) / n_doc + 0.01)
+
+
+class TFThread(threading.Thread):
 
 	def __init__(self, project_file, logger):
 		threading.Thread.__init__(self)
@@ -62,11 +74,29 @@ class MyThread(threading.Thread):
 		tf_thread(self.project_file, self.logger)
 
 
-def get_logger():
-	logger = logging.getLogger("tf_calculating")
+class TFIDFThread(threading.Thread):
+
+	def __init__(self, project_file, logger):
+		threading.Thread.__init__(self)
+		self.project_file = project_file
+		self.logger = logger
+
+	def run(self):
+		self.logger.info('Calculating tf-idf')
+		weight_thread(self.project_file, self.logger)
+
+
+def get_logger(logger_name, log_file):
+	'''
+
+	:param logger_name:
+	:param log_file:
+	:return:
+	'''
+	logger = logging.getLogger(logger_name)
 	logger.setLevel(logging.INFO)
 
-	fh = logging.FileHandler('tf_calculating.log')
+	fh = logging.FileHandler(log_file)
 	fmt = '%(asctime)s : %(threadName)s : %(levelname)s : %(message)s'
 	formatter = logging.Formatter(fmt)
 	fh.setFormatter(formatter)
@@ -106,59 +136,63 @@ def tf_thread(project_file, logger):
 	print('project ' + project_file + ' end')
 
 
+def weight_thread(project_file, logger=None):
+	'''
+
+	:param project_file:
+	:param logger:
+	:return:
+	'''
+	temp = 1
+	idf_dict = {}
+	weight_list = []
+	input_file = output_root_dir + project_file + '_tf.json'
+	with open(input_file, 'r') as f:
+		tf_list = json.load(f)
+		for tf_item in tf_list:
+			weight_item = {}
+			term_size = sum(tf_item.values())
+			for word in tf_item:
+				tf = math.log(tf_item[word] / term_size + 1)
+				# tf = math.log(tf_item[word]) + 1
+				if word in idf_dict:
+					idf = idf_dict[word]
+				else:
+					idf = generate_idf(word, tf_list)
+					idf_dict[word] = idf
+				weight_item[word] = tf * idf
+			weight_list.append(weight_item)
+
+			logger.info(project_file + "    " + str(temp) + " / " + str(total_files[project_file]))
+			temp += 1
+
+	weight_file = output_root_dir + project_file + '_w.json'
+	with open(weight_file, 'w') as f:
+		weight_list = json.dumps(weight_list)
+		f.write(weight_list)
+
+	logger.info(project_file + "calculate tf-idf end")
+
+
 if __name__ == '__main__':
-	# input_file = '../datasets/SourceFile_trim/eclipseUI/eclipse.platform.ui/bundles/org.eclipse.core.commands/src/org/eclipse/core/commands/0d30649 Command.java'
-	# output_file = './tmp.txt'
-
-	if not os.path.exists(output_root_dir):
-		os.makedirs(output_root_dir)
-
-	logger = get_logger()
+	# generate the tf-idf weight for file
+	logger = get_logger('tf-idf_calculating', '../datasets/SourceFile_pre/w_log.log')
 
 	for file in files:
-		thread = MyThread(file, logger)
+		thread = TFIDFThread(file, logger)
 		thread.setName(file)
 		thread.start()
 
-
+	# generate the tf of each term for file
+	# if not os.path.exists(output_root_dir):
+	# 	os.makedirs(output_root_dir)
+	#
+	# logger = get_logger('tf_calculating', '../datasets/SourcFile_pre/tf_log.log')
+	#
 	# for file in files:
-	# 	counts = []
-	# 	temp = 1
-	# 	with open(input_root_dir + file + '.txt', 'r') as f:
-	# 		input_files = f.readlines()
-	# 		with open(output_root_dir + file + '.txt', 'a') as f2:
-	# 			for input_file in input_files:
-	# 				input_file = input_file.strip('\n')
-	# 				output_file = re.sub(r'(.java)', '.txt', input_file)
-	# 				f2.write(output_file + '\n')
-	# 				input_file = input_root_dir + file + '/' + input_file
-	# 				output_file = output_root_dir + file + '/' + output_file
-	# 				counts.append(generate_tf(input_file, output_file))
-	#
-	# 				logging.info(file + "    " + str(temp) + " / " + str(total_files[file]))
-	# 				temp += 1
-	#
-	# 	tf_file = output_root_dir + file + '_tf.json'
-	# 	with open(tf_file, 'w') as f:
-	# 		counts = json.dumps(counts)
-	# 		f.write(counts)
-	#
-	# 	print('project ' + file + ' end')
+	# 	thread = TFThread(file, logger)
+	# 	thread.setName(file)
+	# 	thread.start()
 
-	# corpus = [
-	# 	['this', 'is', 'the', 'first', 'document'],
-	# 	['this', 'is', 'the', 'second', 'second', 'document'],
-	# 	['and', 'the', 'third', 'one'],
-	# 	['is', 'this', 'the', 'first', 'document']
-	# ]
-	#
-	# counts = Counter()
-	#
-	# for i in range(len(corpus)):
-	# 	count = Counter(corpus[i])
-	# 	print(count)
-	# 	counts += count
-	#
-	# print(counts)
 
 
