@@ -48,10 +48,7 @@ def my_word2vec(data):
 
 
 if __name__ == '__main__':
-	# nlp_data = preprocess.load_data_from_xsl('../datasets/AspectJ/AspectJ.xlsx')
-	# nlp_data = preprocess.preprocess(nlp_data)
-	# nlp_data['desc'] = my_word2vec(nlp_data['desc'])
-	input_files = ['AspectJ', 'Birt', 'Eclipse_Platform_UI', 'JDT', 'SWT', 'Tomcat']
+	input_files = ['Tomcat']
 	main_dir = '../datasets/'
 
 	print('start embedding in directory \t' + main_dir)
@@ -63,15 +60,3 @@ if __name__ == '__main__':
 		nlp_data['desc'] = my_word2vec(nlp_data['desc'])
 		nlp_data.to_json(output_file, orient='records')
 		print('embedding end for ' + "\t" + file)
-	# nlp_data = pd.read_json('../datasets/AspectJ/AspectJ_2.json', orient='frame', dtype=False)
-
-	# nlp_data['desc'] = my_word2vec(nlp_data['desc'])
-	# model = KeyedVectors.load_word2vec_format('../models/enwiki_20180420_100d.txt.bz2', binary=False)
-	# model = pickle.load('../models/enwiki_20180420_100d.pkl')
-	# print('embedding end')
-
-	# nlp_data.to_json('../datasets/AspectJ/AspectJ_3.json', orient='records')
-
-# nlp_data.to_excel('../datasets/AspectJ/AspectJ_4.xlsx', index=False, header=True, columns=['bug_id', 'desc'])
-
-# print(model['java'])

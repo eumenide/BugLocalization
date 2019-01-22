@@ -112,9 +112,6 @@ def save_data_to_xsl(file_name, data):
 
 
 if __name__ == '__main__':
-	# test_data = 'Bug 423257 LTW - java.lang.VerifyError: Bad return type with generics and local variables I\'m ' \
-	#             'getting an unhandled RuntimeException from STS 3.2.0.RELEASE: java.lang.RuntimeException at ' \
-	#             'org.aspectj.asm.AsmManager.sameType(AsmManager.java:897) at '
 	input_files = ['AspectJ', 'Birt', 'Eclipse_Platform_UI', 'JDT', 'SWT', 'Tomcat']
 	main_dir = '../datasets/'
 
@@ -126,14 +123,3 @@ if __name__ == '__main__':
 		nlp_data.to_json(output_file, orient='records')
 		print("preprocess end for" + "\t" + file)
 
-# nlp_data = load_data_from_xsl("../datasets/AspectJ/AspectJ.xlsx")
-# nlp_data = preprocess(nlp_data)
-#
-# nlp_data.to_json('../datasets/AspectJ/AspectJ_pre.json', orient='records')
-# save_data_to_xsl("../datasets/AspectJ/AspectJ_2.xlsx", nlp_data)
-
-# wordnet_lemmatizer = WordNetLemmatizer()
-# print(wordnet_lemmatizer.lemmatize('was'))
-
-# print(nlp_data['desc'][6])
-# print(tokenize_and_stopwords(test_data))
