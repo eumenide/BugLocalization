@@ -112,7 +112,7 @@ def save_data_to_xsl(file_name, data):
 
 
 if __name__ == '__main__':
-	input_files = ['AspectJ', 'Birt', 'Eclipse_Platform_UI', 'JDT', 'SWT', 'Tomcat']
+	input_files = ['AspectJ', 'Eclipse_Platform_UI', 'JDT', 'SWT', 'Tomcat']
 	main_dir = '../datasets/'
 
 	for file in input_files:

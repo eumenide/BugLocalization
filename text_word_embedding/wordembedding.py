@@ -48,7 +48,9 @@ def my_word2vec(data):
 
 
 if __name__ == '__main__':
-	input_files = ['Tomcat']
+	# input_files = ['Tomcat']
+	input_files = ['AspectJ', 'Eclipse_Platform_UI', 'JDT', 'SWT', 'Tomcat']
+
 	main_dir = '../datasets/'
 
 	print('start embedding in directory \t' + main_dir)

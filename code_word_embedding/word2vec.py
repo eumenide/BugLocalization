@@ -16,7 +16,8 @@ DEBUG = False
 if not DEBUG:
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-	total_files = {'aspectj': 2394, 'eclipseUI': 17809, 'jdt': 16302, 'swt': 8560, 'tomcat': 2567}
+	# total_files = {'aspectj': 2394, 'eclipseUI': 17809, 'jdt': 16302, 'swt': 8560, 'tomcat': 2567}
+	total_files = {'aspectj': 1406, 'eclipseUI': 15179, 'jdt': 12682, 'swt': 8119, 'tomcat': 2355}
 
 	input_root_dir = '../datasets/SourceFile_pre/'
 	projects = ['aspectj', 'eclipseUI', 'jdt', 'swt', 'tomcat']
@@ -111,15 +112,15 @@ class WordThread(threading.Thread):
 
 
 if __name__ == '__main__':
-	logger = get_logger('code_word_embedding', '../datasets/code_embedding_seq_3.log')
-
-	# projects = ['swt']
+	# logger = get_logger('code_word_embedding', '../datasets/code_embedding.log')
+	#
+	# projects = ['swt', 'tomcat']
 	#
 	# for project in projects:
 	# 	word2vec_thread(project, logger)
 
 	# multithread will break down on my computer
-		# because the memory of my computer is not enough
+	# 	because the memory of my computer is not enough
 	for file in projects:
 		thread = WordThread(file, logger)
 		thread.setName(file)

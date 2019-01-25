@@ -15,7 +15,7 @@ import json
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 
-total_files = {'aspectj': 2394, 'eclipseUI': 17809, 'jdt': 16302, 'swt': 8560, 'tomcat': 2567}
+total_files = {'aspectj': 1406, 'eclipseUI': 15179, 'jdt': 12682, 'swt': 8119, 'tomcat': 2355}
 
 input_root_dir = '../datasets/SourceFile_trim/'
 files = ['aspectj', 'eclipseUI', 'jdt', 'swt', 'tomcat']
@@ -187,7 +187,7 @@ if __name__ == '__main__':
 	# if not os.path.exists(output_root_dir):
 	# 	os.makedirs(output_root_dir)
 	#
-	# logger = get_logger('tf_calculating', '../datasets/SourcFile_pre/tf_log.log')
+	# logger = get_logger('tf_calculating', '../datasets/SourceFile_pre/tf_log.log')
 	#
 	# for file in files:
 	# 	thread = TFThread(file, logger)
